@@ -2,33 +2,54 @@ import React from 'react';
 
 import wppIcon from '../../assets/images/icons/whatsapp.svg';
 
+import api from '../../services/api';
+
 import './styles.css';
 
-function TeacherItem(){
+
+export interface teacher {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+
+interface TeacherItemProps {
+    teacher: teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createnewconnection() {
+        api.post('connections', {
+            user_id: teacher.id
+        })
+    }
+
     return(
         <article className="teacher-item">
             <header>
-                <img src="https://pbs.twimg.com/profile_images/804591156491419649/BnUUh5KE_400x400.jpg" alt="Zack Asmongold"/>
+                <img src={teacher.avatar} alt={teacher.name}/>
                 <div>
-                    <strong>Zack Asmongold</strong>
-                    <span>Economia</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
-            <p>
-                Ama passar o tempo livre, que é quase o tempo todo, jogando World of Warcraft.
-                <br/><br/>
-                Especialista em poupar dinheiro, apesar de ser quase um milionário usa as mesmas roupas desde 2004.
-            </p>
+            <p>{teacher.bio}</p>
 
             <footer>
                 <p>
                     preço/hora
-                    <strong>R$ 100,00</strong>
+                    <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
-                    <img src={wppIcon} alt="Whatsapp"/>
-                    Entrar em contato
-                </button>
+                <a target="blank" 
+                    onClick={createnewconnection} 
+                    href={`https://wa.me/${teacher.whatsapp}`}>
+                        <img src={wppIcon} alt="Whatsapp"/>
+                        Entrar em contato
+                </a>
             </footer>
         </article>
     );
